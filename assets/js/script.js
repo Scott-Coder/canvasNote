@@ -58,11 +58,11 @@ var cylinderContext = null,
 var createCylinder = function(){
 	var canvas = document.createElement("canvas");
 	canvas.id = "canvas-" + new Date().getTime();
-	canvas.width = 33;
+	canvas.width = 40;
 	canvas.height = 90;
 	
 	cylinderContext = canvas.getContext("2d");
-	
+
 	cylinderBg = new Image();
 	cylinderBg.src = "assets/images/cylinder1.png";
 
@@ -80,33 +80,26 @@ var createCylinder = function(){
 createCylinder();
 
 
-var startPoint = 50, // 线条初始位置
-	alpha = 1 // 初始透明度
+var startPoint = 80; // 线条初始位置
 
 // 绘制圆柱体画布
 function drawCylinder(){
-	cylinderContext.clearRect(0, 0, 33, 90);
+	cylinderContext.clearRect(0, 0, 40, 90);
 
-	alpha -= 0.01;
 	startPoint--;
-	if(startPoint == -50){
-		startPoint = 50;
-		alpha = 1;
+
+	if(startPoint == 0){
+		startPoint = 80;
 	}
 	// 写入背景，并保存状态
-	cylinderContext.drawImage(cylinderBg, 0, 0);
-
+	cylinderContext.drawImage(cylinderBg, 4, 0);
 	cylinderContext.save();
-	cylinderContext.drawImage(cylinderLine1,10,startPoint);
-	cylinderContext.drawImage(cylinderLine2,20,startPoint + 15);
+
+	// 绘制线条
+	cylinderContext.drawImage(cylinderLine1, 10 , startPoint);
+	cylinderContext.drawImage(cylinderLine2, 20 , startPoint + 15);
+	cylinderContext.drawImage(cylinderLine2, 30 , startPoint + 5);
 	
-	var imgData = cylinderContext.getImageData(10, startPoint, 3, 49);
-	for (var i = 0, len = imgData.data.length; i < len; i += 4) {
-		// 改变每个像素的透明度
-		imgData.data[i + 3] = imgData.data[i + 3] * alpha;
-	}
-	// 将获取的图片数据放回去。
-	cylinderContext.putImageData(imgData, 10, startPoint);
 	cylinderContext.restore(); // 之前保存的路径状态
 
 	requestAnimationFrame(drawCylinder);
